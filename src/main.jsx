@@ -7,11 +7,11 @@ import { store } from './app/store.js';
 
 import Home from './pages/Home';
 
-import './reset.css';
-import './index.css';
-import About from './pages/About/index.jsx';
-import Login from './pages/Login/Login.jsx';
-import Register from './pages/Register/Register';
+import "./reset.css";
+import About from "./pages/About/index.jsx";
+import Login from "./pages/Login/Login.jsx";
+import Register from "./pages/Register/Register";
+import Profile from "./pages/Profile/Profile.jsx";
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
@@ -19,8 +19,9 @@ const router = createBrowserRouter([
     path: '/about',
     element: <About />,
   },
-  { path: '/login', element: <Login /> },
-  { path: '/register', element: <Register /> },
+  { path: "/login", element: <Login /> },
+  { path: "/register", element: <Register /> },
+  { path: "/profile/:id", element: <Profile /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
