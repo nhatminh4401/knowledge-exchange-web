@@ -19,6 +19,7 @@ const Profile = () => {
   const { id } = useParams();
   const [currentProfile, setCurrentProfile] = useState(null);
   const token = useSelector(selectToken);
+  const [isProfileUpdated, setProfileUpdated] = useState(false);
 
   const config = {
     headers: {
@@ -35,9 +36,10 @@ const Profile = () => {
     } else {
       axios.get(`${USER_API_URL}/user/`, config).then((res) => {
         setCurrentProfile(res.data);
+        setProfileUpdated(false); // Reset the flag
       });
     }
-  }, [id]);
+  }, [id, isProfileUpdated]);
 
   const currentUser = useSelector(selectUser);
   const [Switch, setSwitch] = useState(false);
@@ -86,8 +88,9 @@ const Profile = () => {
           <>
             {Switch ? (
               <EditProfileForm
-                currentUser={currentUser}
+                currentProfile={currentProfile}
                 setSwitch={setSwitch}
+                setProfileUpdated={setProfileUpdated}
               />
             ) : (
               <ProfileBio currentProfile={currentProfile} />

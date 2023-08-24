@@ -7,7 +7,7 @@ const ProfileBio = ({ currentProfile }) => {
       <div>
         {currentProfile?.about ? (
           <>
-            <h4>About</h4>
+            <h4>About me:</h4>
             <p>{currentProfile?.about}</p>
           </>
         ) : (
