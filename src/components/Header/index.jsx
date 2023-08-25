@@ -12,11 +12,12 @@ import {
 const Header = () => {
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(true);
-  const token = useSelector(selectToken);
+  // const token = useSelector(selectToken);
   const user = useSelector(selectUser);
   window.console.log('user: ' + JSON.stringify(user, null, 2));
   const dispatch = useDispatch();
 
+  const token = localStorage.getItem(`token`);
   useEffect(() => {
     if (token) {
       setLoggedIn(true);
