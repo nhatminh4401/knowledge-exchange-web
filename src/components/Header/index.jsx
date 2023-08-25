@@ -69,7 +69,7 @@ const Header = () => {
               <div className="user">
                 <Link to={`/profile/${user?.id}`}>
                   <Avatar icon="" size={40} src={user?.avatar}>
-                    {user?.email?.charAt(0).toUpperCase()}
+                    {user?.username?.charAt(0).toUpperCase()}
                   </Avatar>
                   {/* <div className="avatar">avatar</div> */}
                 </Link>

@@ -5,6 +5,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { USER_API_URL } from "../../utils/constants";
 import { getRankByPoints } from "../../utils/utils";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectToken } from "../../app/reducers/authReducer";
 const Ranking = () => {
   const [ranking, setRanking] = useState([]);
 
@@ -25,6 +28,15 @@ const Ranking = () => {
         alert("Err: ", err);
       });
   }, []);
+
+  const token = useSelector(selectToken);
+
+  const handleProfileNavigation = (e) => {
+    if (!token) {
+      e.preventDefault();
+      alert("Unauthorized access to profile page, please login first!");
+    }
+  };
 
   return (
     <Card className="ranking">
@@ -52,23 +64,25 @@ const Ranking = () => {
             >
               {index + 1}
             </span>
-            <Badge
-              count={getRankByPoints(item?.points)}
-              className="ranking-avatar"
-              style={{ flex: 3 }}
-            >
-              {item?.avatar ? (
-                <Avatar shape="circle" size="large" src={item?.avatar} />
-              ) : (
-                <Avatar
-                  shape="circle"
-                  size="large"
-                  style={{ backgroundColor: "grey" }}
-                >
-                  {item?.username?.charAt(0).toUpperCase()}
-                </Avatar>
-              )}
-            </Badge>
+            <Link to={`/profile/${item?.id}`} onClick={handleProfileNavigation}>
+              <Badge
+                count={getRankByPoints(item?.points)}
+                className="ranking-avatar"
+                style={{ flex: 3 }}
+              >
+                {item?.avatar ? (
+                  <Avatar shape="circle" size="large" src={item?.avatar} />
+                ) : (
+                  <Avatar
+                    shape="circle"
+                    size="large"
+                    style={{ backgroundColor: "grey" }}
+                  >
+                    {item?.username?.charAt(0).toUpperCase()}
+                  </Avatar>
+                )}
+              </Badge>
+            </Link>
             <div
               className="ranking-info"
               style={{ flex: 4, marginLeft: "25px" }}

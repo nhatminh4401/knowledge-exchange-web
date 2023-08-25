@@ -4,7 +4,6 @@ import { useParams } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBirthdayCake, faPen } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
-import { selectUser } from "../../app/reducers/authReducer";
 import { Avatar } from "antd";
 import EditProfileForm from "./EditProfileForm";
 import ProfileBio from "./ProfileBio";
@@ -21,28 +20,26 @@ const Profile = () => {
   const [currentProfile, setCurrentProfile] = useState(null);
   const token = useSelector(selectToken);
   const [isProfileUpdated, setProfileUpdated] = useState(false);
-
   const config = {
     headers: {
       "Content-Type": "application/json",
       authorization: `Bearer ${token}`,
     },
   };
-
   useEffect(() => {
     if (id) {
       axios.get(`${USER_API_URL}/user/?id=${id}`, config).then((res) => {
         setCurrentProfile(res.data);
-      });
-    } else {
-      axios.get(`${USER_API_URL}/user/`, config).then((res) => {
-        setCurrentProfile(res.data);
         setProfileUpdated(false); // Reset the flag
       });
     }
-  }, [id, isProfileUpdated]);
+    // else {
+    //   axios.get(`${USER_API_URL}/user/`, config).then((res) => {
+    //     setCurrentProfile(res.data);
 
-  const currentUser = useSelector(selectUser);
+    //   });
+    // }
+  }, [id, isProfileUpdated]);
   const [Switch, setSwitch] = useState(false);
 
   return (
@@ -55,7 +52,7 @@ const Profile = () => {
                 <Image src={currentProfile?.avatar} width={150} height={130} />
               ) : (
                 <Avatar size={150}>
-                  {currentProfile?.email?.charAt(0).toUpperCase()}
+                  {currentProfile?.username?.charAt(0).toUpperCase()}
                 </Avatar>
               )}
               <div className="user-name">
@@ -71,7 +68,7 @@ const Profile = () => {
                 </p>
               </div>
             </div>
-            {currentUser?.id !== id && (
+            {currentProfile?.id && currentProfile?.id === Number(id) ? (
               <button
                 type="button"
                 onClick={() => setSwitch(true)}
@@ -79,6 +76,8 @@ const Profile = () => {
               >
                 <FontAwesomeIcon icon={faPen} /> Edit Profile
               </button>
+            ) : (
+              <></>
             )}
           </div>
           <>
