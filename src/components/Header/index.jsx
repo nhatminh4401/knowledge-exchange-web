@@ -9,13 +9,14 @@ import {
   logout,
 } from "../../app/reducers/authReducer";
 
-const Header = () => {
+const Header = ({ setSearchTerm }) => {
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(true);
   // const token = useSelector(selectToken);
   const user = useSelector(selectUser);
   window.console.log("user: " + JSON.stringify(user, null, 2));
   const dispatch = useDispatch();
+  const [searchValue, setSearchValue] = useState("");
 
   const token = localStorage.getItem(`token`);
   useEffect(() => {
@@ -30,6 +31,11 @@ const Header = () => {
     dispatch(logout());
     localStorage.removeItem("token");
     navigate("/");
+  };
+
+  const handleSearch = (event) => {
+    event.preventDefault(); // Ngăn trình duyệt thực hiện hành động mặc định của form
+    setSearchTerm(searchValue);
   };
 
   return (
@@ -66,8 +72,13 @@ const Header = () => {
             </NavLink>
           </nav>
           <div className="search">
-            <form>
-              <input type="text" placeholder="Search..." />
+            <form onSubmit={handleSearch}>
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
               <button type="submit">Search</button>
             </form>
           </div>

@@ -1,25 +1,26 @@
-import { Col, Row, Tabs, Typography } from 'antd';
-import Header from '../../components/Header';
-import './styles.css';
-import Question from '../../components/Question';
-import Ranking from '../../components/Ranking';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { userClient } from '../../api/client';
-import { QUESTION_API_URL, REVIEW_API_URL } from '../../utils/constants';
-import { reviewClient } from '../../api/client';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUser, setToken, setUser } from '../../app/reducers/authReducer';
+import { Col, Row, Tabs, Typography } from "antd";
+import Header from "../../components/Header";
+import "./styles.css";
+import Question from "../../components/Question";
+import Ranking from "../../components/Ranking";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { userClient } from "../../api/client";
+import { QUESTION_API_URL, REVIEW_API_URL } from "../../utils/constants";
+import { reviewClient } from "../../api/client";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser, setToken, setUser } from "../../app/reducers/authReducer";
 
 const App = () => {
   const [questionList, setQuestionList] = useState([]);
   const dispatch = useDispatch();
-  const [activeTab, setActiveTab] = useState('mostRecent');
+  const [activeTab, setActiveTab] = useState("mostRecent");
   const [reviewDataCount, setReviewDataCount] = useState([]);
   const [likeCounts, setLikeCounts] = useState({});
   const [likedStatus, setLikedStatus] = useState({});
   const user = useSelector(selectUser);
   const [reviewList, setReviewList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   // const [order, setOrder] = useState("desc");
 
   // useEffect(() => {
@@ -41,15 +42,15 @@ const App = () => {
   // }, []);
   const config = {
     headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
+      "Content-Type": "application/json",
+      Accept: "application/json",
     },
   };
 
   const items = [
     {
-      key: 'mostRecent',
-      label: 'Most Recent',
+      key: "mostRecent",
+      label: "Most Recent",
       children: (
         <>
           {questionList &&
@@ -82,8 +83,8 @@ const App = () => {
       ),
     },
     {
-      key: 'oldest',
-      label: 'Oldest',
+      key: "oldest",
+      label: "Oldest",
       children: (
         <>
           {questionList &&
@@ -120,10 +121,10 @@ const App = () => {
   const token = localStorage.getItem(`token`);
   useEffect(() => {
     if (token) {
-      userClient.defaults.headers['Authorization'] = `Bearer ${token}`;
-      reviewClient.defaults.headers['Authorization'] = `Bearer ${token}`;
+      userClient.defaults.headers["Authorization"] = `Bearer ${token}`;
+      reviewClient.defaults.headers["Authorization"] = `Bearer ${token}`;
       userClient
-        .get('/user')
+        .get("/user")
         .then((res) => {
           console.log(res.data);
           dispatch(setUser(res.data));
@@ -137,10 +138,10 @@ const App = () => {
           setReviewDataCount(res.data);
         })
         .catch((err) => {
-          console.error('Error fetching review data count: ', err);
+          console.error("Error fetching review data count: ", err);
         });
       reviewClient
-        .get('/review')
+        .get("/review")
         .then((res) => {
           console.log(res.data);
           setReviewList([...res.data]);
@@ -149,22 +150,22 @@ const App = () => {
           console.log(err);
         });
     } else {
-      delete userClient.defaults.headers['Authorization'];
+      delete userClient.defaults.headers["Authorization"];
     }
   }, [token, dispatch]);
 
   useEffect(() => {
-    const likedStatusData = reviewDataCount.reduce((acc, review) => {
-      if (review.question_ID !== null) {
-        const questionID = review.question_ID;
-        const userID = review.user;
-        if (!acc[questionID]) {
-          acc[questionID] = {};
-        }
-        acc[questionID][userID] = review.like;
-      }
-      return acc;
-    }, {});
+    // const likedStatusData = reviewDataCount.reduce((acc, review) => {
+    //   if (review.question_ID !== null) {
+    //     const questionID = review.question_ID;
+    //     const userID = review.user;
+    //     if (!acc[questionID]) {
+    //       acc[questionID] = {};
+    //     }
+    //     acc[questionID][userID] = review.like;
+    //   }
+    //   return acc;
+    // }, {});
 
     const likeCountsData = reviewDataCount.reduce((acc, review) => {
       if (review.question_ID !== null && review.like === true) {
@@ -174,15 +175,15 @@ const App = () => {
       return acc;
     }, {});
     setLikeCounts(likeCountsData);
-    setLikedStatus(likedStatusData);
+    // setLikedStatus(likedStatusData);
   }, [reviewDataCount]);
 
   useEffect(() => {
     const token = localStorage.getItem(`token`);
     if (token) {
-      userClient.defaults.headers['Authorization'] = `Bearer ${token}`;
+      userClient.defaults.headers["Authorization"] = `Bearer ${token}`;
       userClient
-        .get('/user')
+        .get("/user")
         .then((res) => {
           console.log(res.data);
           dispatch(setUser(res.data));
@@ -191,15 +192,15 @@ const App = () => {
           console.log(err);
         });
     } else {
-      delete userClient.defaults.headers['Authorization'];
+      delete userClient.defaults.headers["Authorization"];
     }
   }, []);
 
   useEffect(() => {
-    if (activeTab === 'mostRecent') {
+    if (activeTab === "mostRecent") {
       axios
         .get(
-          `${QUESTION_API_URL}/questions?sort=created_date&order=desc`,
+          `${QUESTION_API_URL}/questions?sort=created_date&order=desc&search=${searchTerm}`,
           config
         )
         .then((res) => {
@@ -213,12 +214,13 @@ const App = () => {
           setQuestionList(updatedQuestionList);
         })
         .catch((err) => {
-          alert('Error: Question not exists', err);
+          alert("Error: Question not exists", err);
+          setQuestionList([]);
         });
-    } else if (activeTab === 'oldest') {
+    } else if (activeTab === "oldest") {
       axios
         .get(
-          `${QUESTION_API_URL}/questions?sort=created_date&order=asc`,
+          `${QUESTION_API_URL}/questions?sort=created_date&order=asc&search=${searchTerm}`,
           config
         )
         .then((res) => {
@@ -231,26 +233,27 @@ const App = () => {
           setQuestionList(updatedQuestionList);
         })
         .catch((err) => {
-          alert('Error: Question not exists', err);
+          alert("Error: Question not exists", err);
+          setQuestionList([]);
         });
     }
-  }, [activeTab, likeCounts]); // Gọi lại khi activeTab thay đổi
+  }, [activeTab, likeCounts, searchTerm]); // Gọi lại khi activeTab thay đổi
 
   const handleTabChange = (tabKey) => {
     setActiveTab(tabKey);
   };
-
+  window.console.log("searchTerm: " + searchTerm);
   return (
     <>
-      <Header />
-      <div className='wrapper'>
-        <div className='container'>
+      <Header setSearchTerm={setSearchTerm} />
+      <div className="wrapper">
+        <div className="container">
           <div>
             <Typography.Title level={1}>Questions</Typography.Title>
             <p>Ask a question and get a quick answer.</p>
           </div>
           <Row>
-            <Col span={18} className='questions'>
+            <Col span={18} className="questions">
               <Tabs
                 activeKey={activeTab}
                 items={items}
