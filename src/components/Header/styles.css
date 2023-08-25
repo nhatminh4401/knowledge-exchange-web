@@ -10,22 +10,27 @@
   backdrop-filter: saturate(180%) blur(5px);
   background-color: rgba(#fff, 0.8);
 }
+
 .logoImg {
-  width: 35px;
+  width: 55px;
 }
+
 .logo {
   display: flex;
   align-items: center;
 }
+
 .logoText {
   margin-left: 10px;
   color: #000;
   font-size: 17px;
 }
+
 .logoText span {
   color: #444;
   font-weight: normal;
 }
+
 .content {
   display: flex;
   align-items: center;
@@ -55,10 +60,12 @@
   text-decoration: none;
   transition: color, background-color, 200ms ease-in;
 }
+
 .navLink:hover {
   color: #000;
   background-color: rgba(#eaeaea, 0.5);
 }
+
 .navLink.active {
   color: #000;
 }
@@ -130,6 +137,7 @@
 .navToggle.active .navToggleItem::after {
   transform: rotate(-45deg);
 }
+
 .navToggleItem {
   width: 25px;
   height: 2px;
@@ -144,6 +152,7 @@
   position: relative;
   transition: background-color 0.2s linear;
 }
+
 .navToggleItem::before,
 .navToggleItem::after {
   content: '';

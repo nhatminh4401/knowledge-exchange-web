@@ -57,8 +57,10 @@ const EditProfileForm = ({ currentProfile, setSwitch, setProfileUpdated }) => {
         window.console.log(
           "update profile: " + JSON.stringify(res.data, null, 2)
         );
-        dispatch(updateProfile(res.data));
-        setProfileUpdated(true);
+        if (res?.data) {
+          dispatch(updateProfile(res?.data?.data));
+          setProfileUpdated(true);
+        }
       })
       .catch((err) => {
         alert("Update profile failed!", err);
