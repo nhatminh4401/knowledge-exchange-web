@@ -1,0 +1,75 @@
+.question {
+  margin-bottom: 20px;
+}
+.question-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.question-content {
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+ul.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+li.tag-item {
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+  font-size: 14px;
+  font-weight: 400;
+}
+.question-author {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.question-author__name {
+  color: #999;
+  margin-right: 5px;
+}
+.question-author__avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0 10px;
+  background: red;
+}
+.question-athor__time {
+  color: #999;
+  font-size: 14px;
+  font-weight: 400;
+}
+.question-like {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.question-like__icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  text-decoration: underline;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.question-unlike__icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.question-like__count {
+  color: #999;
+  font-size: 14px;
+  font-weight: 400;
+  margin-right: 5px;
+}
