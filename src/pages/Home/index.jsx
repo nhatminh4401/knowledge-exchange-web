@@ -1,21 +1,23 @@
-import { Col, Row, Tabs, Typography } from "antd";
-import Header from "../../components/Header";
-import "./styles.css";
-import Question from "../../components/Question";
-import Ranking from "../../components/Ranking";
-import { useCallback, useEffect, useState } from "react";
-import axios from "axios";
-import { QUESTION_API_URL, REVIEW_API_URL } from "../../utils/constants";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../app/reducers/authReducer";
+import { Col, Row, Tabs, Typography } from 'antd';
+import Header from '../../components/Header';
+import './styles.css';
+import Question from '../../components/Question';
+import Ranking from '../../components/Ranking';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { QUESTION_API_URL, REVIEW_API_URL } from '../../utils/constants';
+import { userClient } from '../../api/client';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser, setToken, setUser } from '../../app/reducers/authReducer';
+
 const App = () => {
   const [questionList, setQuestionList] = useState([]);
-  const [activeTab, setActiveTab] = useState("mostRecent");
+  const dispatch = useDispatch();
+  const [activeTab, setActiveTab] = useState('mostRecent');
   const [reviewDataCount, setReviewDataCount] = useState([]);
   const [likeCounts, setLikeCounts] = useState({});
   const [likedStatus, setLikedStatus] = useState({});
   const user = useSelector(selectUser);
-
   // const [order, setOrder] = useState("desc");
 
   // useEffect(() => {
@@ -37,15 +39,15 @@ const App = () => {
   // }, []);
   const config = {
     headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
   };
 
   const items = [
     {
-      key: "mostRecent",
-      label: "Most Recent",
+      key: 'mostRecent',
+      label: 'Most Recent',
       children: (
         <>
           {questionList &&
@@ -72,8 +74,8 @@ const App = () => {
       ),
     },
     {
-      key: "oldest",
-      label: "Oldest",
+      key: 'oldest',
+      label: 'Oldest',
       children: (
         <>
           {questionList &&
@@ -108,7 +110,7 @@ const App = () => {
         setReviewDataCount(res.data);
       })
       .catch((err) => {
-        console.error("Error fetching review data count: ", err);
+        console.error('Error fetching review data count: ', err);
       });
   }, []);
 
@@ -137,7 +139,28 @@ const App = () => {
   }, [reviewDataCount]);
 
   useEffect(() => {
-    if (activeTab === "mostRecent") {
+    if (activeTab === 'mostRecent') {
+      const token = localStorage.getItem(`token`);
+      if (token) {
+        userClient.defaults.headers['Authorization'] = `Bearer ${token}`;
+        userClient
+          .get('/user')
+          .then((res) => {
+            console.log(res.data);
+            dispatch(setUser(res.data));
+            dispatch(setToken(res.data?.tokens));
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        delete userClient.defaults.headers['Authorization'];
+      }
+    }
+  });
+
+  useEffect(() => {
+    if (activeTab === 'mostRecent') {
       axios
         .get(
           `${QUESTION_API_URL}/questions?sort=created_date&order=desc`,
@@ -153,9 +176,9 @@ const App = () => {
           setQuestionList(updatedQuestionList);
         })
         .catch((err) => {
-          alert("Err: ", err);
+          alert('Err: ', err);
         });
-    } else if (activeTab === "oldest") {
+    } else if (activeTab === 'oldest') {
       axios
         .get(
           `${QUESTION_API_URL}/questions?sort=created_date&order=asc`,
@@ -171,7 +194,7 @@ const App = () => {
           setQuestionList(updatedQuestionList);
         })
         .catch((err) => {
-          alert("Err: ", err);
+          alert('Err: ', err);
         });
     }
   }, [activeTab, likeCounts]); // Gọi lại khi activeTab thay đổi
@@ -183,14 +206,14 @@ const App = () => {
   return (
     <>
       <Header />
-      <div className="wrapper">
-        <div className="container">
+      <div className='wrapper'>
+        <div className='container'>
           <div>
             <Typography.Title level={1}>Questions</Typography.Title>
             <p>Ask a question and get a quick answer.</p>
           </div>
           <Row>
-            <Col span={18} className="questions">
+            <Col span={18} className='questions'>
               <Tabs
                 activeKey={activeTab}
                 items={items}

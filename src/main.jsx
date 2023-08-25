@@ -14,6 +14,7 @@ import Login from './pages/Login/Login.jsx';
 import Register from './pages/Register/Register';
 import Profile from './pages/Profile/Profile.jsx';
 import QuestionDetail from './pages/QuestionDetail';
+import Admin from './pages/Admin/index.jsx';
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
     element: <About />,
   },
   { path: '/login', element: <Login /> },
+  { path: '/admin', element: <Admin /> },
   { path: '/register', element: <Register /> },
   { path: '/profile/:id', element: <Profile /> },
   { path: '/question/:id', element: <QuestionDetail /> },
