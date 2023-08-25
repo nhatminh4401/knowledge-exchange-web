@@ -14,6 +14,7 @@ import { USER_API_URL } from "../../utils/constants";
 import { selectToken, selectUser } from "../../app/reducers/authReducer";
 import { Image } from "antd";
 import { getRankByPoints } from "./../../utils/utils";
+import ChangePasswordForm from "./ChangePasswordForm";
 
 const Profile = () => {
   const { id } = useParams();
@@ -42,6 +43,7 @@ const Profile = () => {
     // }
   }, [id, isProfileUpdated]);
   const [Switch, setSwitch] = useState(false);
+  const [isPasswordChanged, setPasswordChanged] = useState(false);
 
   return (
     <div className="home-container-1">
@@ -70,26 +72,44 @@ const Profile = () => {
               </div>
             </div>
             {user?.id && user?.id === Number(id) ? (
-              <button
-                type="button"
-                onClick={() => setSwitch(true)}
-                className="edit-profile-btn"
-              >
-                <FontAwesomeIcon icon={faPen} /> Edit Profile
-              </button>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setSwitch(true)}
+                  className="edit-profile-btn"
+                >
+                  <FontAwesomeIcon icon={faPen} /> Edit Profile
+                </button>
+                <br />
+                <br />
+                <button
+                  type="button"
+                  onClick={() => setPasswordChanged(true)}
+                  className="edit-profile-btn"
+                >
+                  <FontAwesomeIcon icon={faPen} /> Change password
+                </button>
+              </div>
             ) : (
               <></>
             )}
           </div>
           <>
             {Switch ? (
-              <EditProfileForm
-                currentProfile={currentProfile}
-                setSwitch={setSwitch}
-                setProfileUpdated={setProfileUpdated}
-              />
+              <>
+                <EditProfileForm
+                  currentProfile={currentProfile}
+                  setSwitch={setSwitch}
+                  setProfileUpdated={setProfileUpdated}
+                />
+              </>
             ) : (
               <ProfileBio currentProfile={currentProfile} />
+            )}
+            {isPasswordChanged ? (
+              <ChangePasswordForm setSwitch={setPasswordChanged} />
+            ) : (
+              <></>
             )}
           </>
         </section>
