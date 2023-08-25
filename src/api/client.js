@@ -4,6 +4,7 @@ import {
   AUTH_API_URL,
   QUESTION_API_URL,
   USER_API_URL,
+  REVIEW_API_URL,
 } from '../utils/constants';
 
 export const questionClient = axios.create({
@@ -17,6 +18,15 @@ export const questionClient = axios.create({
 
 export const userClient = axios.create({
   baseURL: USER_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+  paramsSerializer: (params) => queryString.stringify(params),
+});
+
+export const reviewClient = axios.create({
+  baseURL: REVIEW_API_URL,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
