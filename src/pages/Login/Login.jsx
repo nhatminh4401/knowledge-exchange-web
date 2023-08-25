@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "./login.css";
 import { Form, Input, Button } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { AUTH_API_URL } from "../../utils/constants";
+import { AUTH_API_URL, USER_API_URL } from "../../utils/constants";
 import { useDispatch } from "react-redux";
 import { setToken, setUser } from "../../app/reducers/authReducer";
 
@@ -36,9 +36,18 @@ const Login = () => {
         .post(`${AUTH_API_URL}/login/`, credentials, config)
         .then((res) => {
           window.console.log("aaa: " + JSON.stringify(res.data, null, 2));
-          dispatch(setUser(res.data?.user));
 
-          dispatch(setToken(res.data?.token));
+          const config2 = {
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${res.data?.tokens}`,
+            },
+          };
+          axios.get(`${USER_API_URL}/user/`, config2).then((res) => {
+            window.console.log("bbb: " + JSON.stringify(res.data, null, 2));
+            dispatch(setUser(res.data));
+          });
+          dispatch(setToken(res.data?.tokens));
           navigate("/");
         })
         .catch((err) => {
