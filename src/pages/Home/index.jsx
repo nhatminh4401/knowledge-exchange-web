@@ -139,25 +139,22 @@ const App = () => {
   }, [reviewDataCount]);
 
   useEffect(() => {
-    if (activeTab === "mostRecent") {
-      const token = localStorage.getItem(`token`);
-      if (token) {
-        userClient.defaults.headers["Authorization"] = `Bearer ${token}`;
-        userClient
-          .get("/user")
-          .then((res) => {
-            console.log(res.data);
-            dispatch(setUser(res.data));
-            dispatch(setToken(res.data?.tokens));
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else {
-        delete userClient.defaults.headers["Authorization"];
-      }
+    const token = localStorage.getItem(`token`);
+    if (token) {
+      userClient.defaults.headers['Authorization'] = `Bearer ${token}`;
+      userClient
+        .get('/user')
+        .then((res) => {
+          console.log(res.data);
+          dispatch(setUser(res.data));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      delete userClient.defaults.headers['Authorization'];
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (activeTab === "mostRecent") {
