@@ -20,7 +20,7 @@ const Register = () => {
 
   const onFinish = (values) => {
     const { username, email, phone, password, confirm } = values;
-    if (username && password === confirm) {
+    if (username && password === confirm && password.length >= 8) {
       // register user here
 
       const body = {
@@ -38,6 +38,8 @@ const Register = () => {
         console.warn(err);
         alert("Register failed!", err);
       }
+    } else if (password.length < 8 || confirm.length < 8) {
+      alert("Password must be at least 8 characters long!");
     }
   };
 
@@ -92,6 +94,14 @@ const Register = () => {
                 if (!value || getFieldValue("password") === value) {
                   setIsValid(true);
                   return Promise.resolve();
+                }
+                if (getFieldValue("password").length < 8) {
+                  setIsValid(false);
+                  return Promise.reject(
+                    new Error(
+                      "The password must be at least 8 characters long!"
+                    )
+                  );
                 }
                 setIsValid(false);
                 return Promise.reject(
