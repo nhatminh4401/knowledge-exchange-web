@@ -3,6 +3,8 @@ import "./styles.css";
 import { LikeOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectToken } from "../../app/reducers/authReducer";
 const Question = ({
   title,
   avatar,
@@ -12,8 +14,10 @@ const Question = ({
   username,
   created_date,
   category_name,
+  like,
+  userLiked,
 }) => {
-  window.console.log("asdasd: ", title);
+  const token = useSelector(selectToken);
   return (
     <Card className="question">
       <h3 className="question-title">{title}</h3>
@@ -49,9 +53,24 @@ const Question = ({
           </span>
         </div>
         <div className="question-like">
-          <Badge className="question-like__count" count={1000} />
+          <Badge
+            className="question-like__count"
+            count={like > 0 ? Number(like) : 0}
+          />
           <span className="question-like__icon">
-            <LikeOutlined />
+            <LikeOutlined
+              onClick={() => {
+                if (!token) {
+                  alert("Unauthorized access to like, please login first!");
+                } else {
+                  if (userLiked) {
+                    alert("You already liked this question!");
+                  } else {
+                    alert("Liked!");
+                  }
+                }
+              }}
+            />
           </span>
         </div>
       </Row>

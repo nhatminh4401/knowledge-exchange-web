@@ -5,10 +5,17 @@ import Question from "../../components/Question";
 import Ranking from "../../components/Ranking";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import { QUESTION_API_URL } from "../../utils/constants";
+import { QUESTION_API_URL, REVIEW_API_URL } from "../../utils/constants";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../app/reducers/authReducer";
 const App = () => {
   const [questionList, setQuestionList] = useState([]);
   const [activeTab, setActiveTab] = useState("mostRecent");
+  const [reviewDataCount, setReviewDataCount] = useState([]);
+  const [likeCounts, setLikeCounts] = useState({});
+  const [likedStatus, setLikedStatus] = useState({});
+  const user = useSelector(selectUser);
+
   // const [order, setOrder] = useState("desc");
 
   // useEffect(() => {
@@ -54,6 +61,10 @@ const App = () => {
                   username={question.username}
                   created_date={question.created_date}
                   category_name={question.category_name}
+                  like={question.like}
+                  // userLiked={
+                  //   likedStatus[question.question_ID]?.[user?.id] ?? false
+                  // }
                 />
               );
             })}
@@ -78,6 +89,10 @@ const App = () => {
                   username={question.username}
                   created_date={question.created_date}
                   category_name={question.category_name}
+                  like={question.like}
+                  // userLiked={
+                  //   likedStatus[question.question_ID]?.[user?.id] ?? false
+                  // }
                 />
               );
             })}
@@ -87,6 +102,41 @@ const App = () => {
   ];
 
   useEffect(() => {
+    axios
+      .get(`${REVIEW_API_URL}/review-question?like`, config)
+      .then((res) => {
+        setReviewDataCount(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching review data count: ", err);
+      });
+  }, []);
+
+  useEffect(() => {
+    const likedStatusData = reviewDataCount.reduce((acc, review) => {
+      if (review.question_ID !== null) {
+        const questionID = review.question_ID;
+        const userID = review.user;
+        if (!acc[questionID]) {
+          acc[questionID] = {};
+        }
+        acc[questionID][userID] = review.like;
+      }
+      return acc;
+    }, {});
+
+    // const likeCountsData = reviewDataCount.reduce((acc, review) => {
+    //   if (review.question_ID !== null && review.like === true) {
+    //     const questionID = review.question_ID;
+    //     acc[questionID] = (acc[questionID] || 0) + 1;
+    //   }
+    //   return acc;
+    // }, {});
+    // setLikeCounts(likeCountsData);
+    setLikedStatus(likedStatusData);
+  }, [reviewDataCount]);
+
+  useEffect(() => {
     if (activeTab === "mostRecent") {
       axios
         .get(
@@ -94,8 +144,13 @@ const App = () => {
           config
         )
         .then((res) => {
-          window.console.log("question: " + JSON.stringify(res.data, null, 2));
-          setQuestionList(res.data);
+          const updatedQuestionList = res.data.map((question) => {
+            return {
+              ...question,
+              like: likeCounts[question.question_ID] || 0,
+            };
+          });
+          setQuestionList(updatedQuestionList);
         })
         .catch((err) => {
           alert("Err: ", err);
@@ -107,14 +162,19 @@ const App = () => {
           config
         )
         .then((res) => {
-          window.console.log("question: " + JSON.stringify(res.data, null, 2));
-          setQuestionList(res.data);
+          const updatedQuestionList = res.data.map((question) => {
+            return {
+              ...question,
+              like: likeCounts[question.question_ID] || 0,
+            };
+          });
+          setQuestionList(updatedQuestionList);
         })
         .catch((err) => {
           alert("Err: ", err);
         });
     }
-  }, [activeTab]); // Gọi lại khi activeTab thay đổi
+  }, [activeTab, likeCounts]); // Gọi lại khi activeTab thay đổi
 
   const handleTabChange = (tabKey) => {
     setActiveTab(tabKey);
