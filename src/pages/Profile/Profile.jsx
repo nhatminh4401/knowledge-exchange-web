@@ -11,7 +11,7 @@ import "./Profile.css";
 
 import axios from "axios";
 import { USER_API_URL } from "../../utils/constants";
-import { selectToken } from "../../app/reducers/authReducer";
+import { selectToken, selectUser } from "../../app/reducers/authReducer";
 import { Image } from "antd";
 import { getRankByPoints } from "./../../utils/utils";
 
@@ -19,6 +19,7 @@ const Profile = () => {
   const { id } = useParams();
   const [currentProfile, setCurrentProfile] = useState(null);
   const token = useSelector(selectToken);
+  const user = useSelector(selectUser);
   const [isProfileUpdated, setProfileUpdated] = useState(false);
   const config = {
     headers: {
@@ -68,7 +69,7 @@ const Profile = () => {
                 </p>
               </div>
             </div>
-            {currentProfile?.id && currentProfile?.id === Number(id) ? (
+            {user?.id && user?.id === Number(id) ? (
               <button
                 type="button"
                 onClick={() => setSwitch(true)}
