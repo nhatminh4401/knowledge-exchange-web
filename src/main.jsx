@@ -15,6 +15,7 @@ import Register from './pages/Register/Register';
 import Profile from './pages/Profile/Profile.jsx';
 import QuestionDetail from './pages/QuestionDetail';
 import Admin from './pages/Admin/index.jsx';
+import CreateQuestion from './pages/CreateQuestion/index.jsx';
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
   { path: '/admin', element: <Admin /> },
   { path: '/register', element: <Register /> },
   { path: '/profile/:id', element: <Profile /> },
+  { path: '/question/create', element: <CreateQuestion /> },
   { path: '/question/:id', element: <QuestionDetail /> },
 ]);
 
