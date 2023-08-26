@@ -129,11 +129,7 @@ const QuestionDetail = () => {
                   <span className="answer-author__name">Min</span>
                   <span className="answer-author__time">25 Aug 2023</span>
                 </div>
-                <div className="answer-content">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Odiol
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Sapiente, aut!
-                </div>
+                <div className="answer-content">Hello</div>
                 <ul className="comment-list">
                   <Comment />
                   <Comment />
